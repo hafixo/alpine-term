@@ -1,0 +1,18 @@
+diff -uNr qemu-5.1.0/configure qemu-5.1.0.mod/configure
+--- qemu-5.1.0/configure	2020-09-05 16:56:55.236312855 +0300
++++ qemu-5.1.0.mod/configure	2020-09-05 17:13:22.816705522 +0300
+@@ -6649,13 +6649,9 @@
+ fi
+ if test "$softmmu" = yes ; then
+   if test "$linux" = yes; then
+-    if test "$virtfs" != no && test "$cap_ng" = yes && test "$attr" = yes ; then
++    if test "$virtfs" != no; then
+       virtfs=yes
+-      helpers="$helpers fsdev/virtfs-proxy-helper\$(EXESUF)"
+     else
+-      if test "$virtfs" = yes; then
+-        error_exit "VirtFS requires libcap-ng devel and libattr devel"
+-      fi
+       virtfs=no
+     fi
+     if test "$mpath" != no && test "$mpathpersist" = yes ; then
