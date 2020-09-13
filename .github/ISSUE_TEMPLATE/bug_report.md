@@ -7,11 +7,7 @@ about: Create a report to help us improve
 **Type:**
 - [ ] Application bug: misbehaving of terminal emulator frontend.
 - [ ] OS bug: boot issues and system misconfiguration.
-
-**Acknowledgement:**
-- [ ] I understand that operating system and its packages are
-developed by third parties and Alpine Term author will not fix
-bugs in these packages.
+<!-- Package bugs are not eligible for fixing by Alpine Term author. -->
 
 **Problem description:**
 <!-- 
