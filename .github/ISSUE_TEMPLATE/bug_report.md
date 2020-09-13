@@ -4,27 +4,27 @@ about: Create a report to help us improve
 
 ---
 
-<!--
-IMPORTANT: do not submit package-specific issues unless you are
-sure they happen due to bug in QEMU emulation.
--->
-
 **Type:**
-- [ ] Application bug
-- [ ] OS bug
+- [ ] Application bug: misbehaving of terminal emulator frontend.
+- [ ] OS bug: boot issues and system misconfiguration.
 
-**Problem description**
+**Acknowledgement:**
+- [ ] I understand that operating system and its packages are
+developed by third parties and Alpine Term author will not fix
+bugs in these packages.
+
+**Problem description:**
 <!-- 
 A clear and concise description of what the problem is.
 You may post screenshots in addition to description.
 -->
 
-**Steps to reproduce**
+**Steps to reproduce:**
 <!--
 A description of each step needed to reproduce the problem.
 -->
 
-**Expected behavior**
+**Expected behavior:**
 <!--
 A description of what you expected to happen.
 -->
