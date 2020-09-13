@@ -60,11 +60,11 @@ Alpine Term is provided in 2 variants:
 
  - Standard - small, only basic utilities are pre-installed in the VM image.
 
-   Download: [alpine-term-v12.1-standard.apk](https://github.com/xeffyr/alpine-term/releases/download/v12.1/alpine-term-v12.1-standard.apk)
+   Download: [alpine-term-v12.1-standard-release.apk](https://github.com/xeffyr/alpine-term/releases/download/v12.1/alpine-term-v12.1-standard-release.apk)
 
  - Ultimate - large, many utilities are available out-of-box. Close to configuration what I'm actually using.
 
-   Download: [alpine-term-v12.1-ultimate.apk](https://github.com/xeffyr/alpine-term/releases/download/v12.1/alpine-term-v12.1-ultimate.apk)
+   Download: [alpine-term-v12.1-ultimate-release.apk](https://github.com/xeffyr/alpine-term/releases/download/v12.1/alpine-term-v12.1-ultimate-release.apk)
 
 Minimal recommended properties of your Android device:
 
