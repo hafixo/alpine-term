@@ -1,0 +1,6 @@
+# Credentials.
+alpine-term-app/app/release.gradle filter=git-crypt diff=git-crypt
+
+# Keystores.
+*.jks filter=git-crypt diff=git-crypt
+*.p12 filter=git-crypt diff=git-crypt
