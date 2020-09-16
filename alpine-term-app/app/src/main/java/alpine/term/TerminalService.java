@@ -302,9 +302,12 @@ public class TerminalService extends Service implements SessionChangedCallback {
             }
         } else {
             // If cannot detect host RAM size, attempt to use the minimal safe
-            // value (default 256M).
+            // value (default 512M).
             processArgs.addAll(Arrays.asList("-accel", "tcg,tb-size=128"));
         }
+
+        // Balloon device for dynamic RAM allocation.
+        processArgs.addAll(Arrays.asList("-device", "virtio-balloon"));
 
         // Do not create default devices.
         processArgs.add("-nodefaults");
