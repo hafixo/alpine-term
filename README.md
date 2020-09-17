@@ -60,11 +60,11 @@ Alpine Term is provided in 2 variants:
 
  - Standard - small, only basic utilities are pre-installed in the VM image.
 
-   Download: [alpine-term-v12.1-standard-release.apk](https://github.com/xeffyr/alpine-term/releases/download/v12.1/alpine-term-v12.1-standard-release.apk)
+   Download: [alpine-term-v13.0-standard-release.apk](https://github.com/xeffyr/alpine-term/releases/download/v13.0/alpine-term-v13.0-standard-release.apk)
 
  - Ultimate - large, many utilities are available out-of-box. Close to configuration what I'm actually using.
 
-   Download: [alpine-term-v12.1-ultimate-release.apk](https://github.com/xeffyr/alpine-term/releases/download/v12.1/alpine-term-v12.1-ultimate-release.apk)
+   Download: [alpine-term-v13.0-ultimate-release.apk](https://github.com/xeffyr/alpine-term/releases/download/v13.0/alpine-term-v13.0-ultimate-release.apk)
 
 Minimal recommended properties of your Android device:
 
@@ -81,8 +81,8 @@ hardware.
 
 Following pre-built QEMU images are available:
 
-* Arch Linux (561M): [archlinux-alpine-term-r2020.09.13.qcow2](https://github.com/xeffyr/alpine-term/releases/download/v12.1/archlinux-alpine-term-r2020.09.13.qcow2)
-* Debian 10 (670M): [debian10-alpine-term-r2020.09.13.qcow2](https://github.com/xeffyr/alpine-term/releases/download/v12.1/debian10-alpine-term-r2020.09.13.qcow2)
+* Arch Linux (563M): [archlinux-alpine-term-r2020.09.13.qcow2](https://github.com/xeffyr/alpine-term/releases/download/v13.0/archlinux-alpine-term-r2020.09.13.qcow2)
+* Debian 10 (665M): [debian10-alpine-term-r2020.09.13.qcow2](https://github.com/xeffyr/alpine-term/releases/download/v13.0/debian10-alpine-term-r2020.09.13.qcow2)
 
 To use one of these images, download it, rename to `hdd.qcow2` and place
 exactly at this location:
