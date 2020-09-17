@@ -685,6 +685,11 @@ page-break-after: avoid;
 <pre><code>object_add memory-backend-ram,id=mem1,size=1024M
 device_add pc-dimm,id=dimm1,memdev=mem1</code></pre>
 <p>Do not specify more RAM than the host can provide. In fact, only 50-55% of total allocated RAM by QEMU are safe. Specifying higher values will likely result in Alpine Term being force-closed by the Android OS.</p>
+<p>Dynamically limiting of used host RAM is also possible. This can be done through monitor command. See an example of limiting RAM usage to 350M:</p>
+<pre><code>balloon 350</code></pre>
+<p>If guest operating system uses less memory than specified value, QEMU will de-allocate host RAM and update visible memory size for the virtual machine. In other cases virtual machine may not release used memory or do that partially.</p>
+<p>You can increase the memory allocation by specifying the higher value, however you will not be able use values higher than virtual machine is configured to use. So if QEMU is configured to use 2048M of memory, values beyond the “2048” will not work.</p>
+<p>Dynamically changing RAM allocation is implemented through balloon device and requires cooperation from the guest operating system. It must provide a driver for this device. Kernel supplied with Alpine Linux has support for balloon device. Custom operating systems or kernels are not guaranteed to work properly with it.</p>
 <h5 id="backing-up-the-hdd-image">Backing up the HDD image</h5>
 <p>Use QEMU monitor to back up the operating system image. You can do this by executing the next command:</p>
 <pre><code>drive_backup -f -c hd0 ./backup.qcow2 qcow2</code></pre>
@@ -693,25 +698,25 @@ device_add pc-dimm,id=dimm1,memdev=mem1</code></pre>
 <p>After finishing you can get your image in the Alpine Term private directory on <a href="#sharing-files-between-host-and-vm">shared storage</a>.</p>
 <h5 id="restoring-the-hdd-image">Restoring the HDD image</h5>
 <p>The restoring operation is quite complicated as you cannot have direct access to the runtime directory of Alpine Term. However, you can use trick with the ‘drive_backup’ command to overwrite the original HDD image.</p>
-<div class="sourceCode" id="cb4" data-startFrom="1"><pre class="sourceCode numberSource numberLines"><code class="sourceCode"><a class="sourceLine" id="cb4-1" title="1"># First, reset and stop the virtual machine:</a>
-<a class="sourceLine" id="cb4-2" title="2">system_reset</a>
-<a class="sourceLine" id="cb4-3" title="3">stop</a>
-<a class="sourceLine" id="cb4-4" title="4"></a>
-<a class="sourceLine" id="cb4-5" title="5"># Check the path where the original image is being stored:</a>
-<a class="sourceLine" id="cb4-6" title="6">info block</a>
-<a class="sourceLine" id="cb4-7" title="7"></a>
-<a class="sourceLine" id="cb4-8" title="8"># Here it will be assumed that its path is</a>
-<a class="sourceLine" id="cb4-9" title="9"># /data/user/0/alpine.term/files/run/alpine-linux-hdd.qcow2</a>
-<a class="sourceLine" id="cb4-10" title="10"></a>
-<a class="sourceLine" id="cb4-11" title="11"># Remove the primary HDD:</a>
-<a class="sourceLine" id="cb4-12" title="12">drive_del hd0</a>
-<a class="sourceLine" id="cb4-13" title="13">device_del scsi-hd0</a>
-<a class="sourceLine" id="cb4-14" title="14"></a>
-<a class="sourceLine" id="cb4-15" title="15"># Now you can temporarily add your backup image as a block device:</a>
-<a class="sourceLine" id="cb4-16" title="16">drive_add 0 if=none,id=temphd0,format=qcow2,file=./backup.qcow2</a>
-<a class="sourceLine" id="cb4-17" title="17"></a>
-<a class="sourceLine" id="cb4-18" title="18"># And overwrite the original HDD image:</a>
-<a class="sourceLine" id="cb4-19" title="19">drive_backup -f -c temphd0 /data/user/0/alpine.term/files/run/alpine-linux-hdd.qcow2 qcow2</a></code></pre></div>
+<div class="sourceCode" id="cb5" data-startFrom="1"><pre class="sourceCode numberSource numberLines"><code class="sourceCode"><a class="sourceLine" id="cb5-1" title="1"># First, reset and stop the virtual machine:</a>
+<a class="sourceLine" id="cb5-2" title="2">system_reset</a>
+<a class="sourceLine" id="cb5-3" title="3">stop</a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5"># Check the path where the original image is being stored:</a>
+<a class="sourceLine" id="cb5-6" title="6">info block</a>
+<a class="sourceLine" id="cb5-7" title="7"></a>
+<a class="sourceLine" id="cb5-8" title="8"># Here it will be assumed that its path is</a>
+<a class="sourceLine" id="cb5-9" title="9"># /data/user/0/alpine.term/files/run/alpine-linux-hdd.qcow2</a>
+<a class="sourceLine" id="cb5-10" title="10"></a>
+<a class="sourceLine" id="cb5-11" title="11"># Remove the primary HDD:</a>
+<a class="sourceLine" id="cb5-12" title="12">drive_del hd0</a>
+<a class="sourceLine" id="cb5-13" title="13">device_del scsi-hd0</a>
+<a class="sourceLine" id="cb5-14" title="14"></a>
+<a class="sourceLine" id="cb5-15" title="15"># Now you can temporarily add your backup image as a block device:</a>
+<a class="sourceLine" id="cb5-16" title="16">drive_add 0 if=none,id=temphd0,format=qcow2,file=./backup.qcow2</a>
+<a class="sourceLine" id="cb5-17" title="17"></a>
+<a class="sourceLine" id="cb5-18" title="18"># And overwrite the original HDD image:</a>
+<a class="sourceLine" id="cb5-19" title="19">drive_backup -f -c temphd0 /data/user/0/alpine.term/files/run/alpine-linux-hdd.qcow2 qcow2</a></code></pre></div>
 <p>Wait until job finishes (command ‘info block-jobs’) and then restart Alpine Term.</p>
 <h4 id="shell">Shell</h4>
 <h5 id="list-of-common-shell-commands">List of common shell commands</h5>
@@ -902,21 +907,20 @@ device_add pc-dimm,id=dimm1,memdev=mem1</code></pre>
 <h4 id="using-custom-disk-images">Using custom disk images</h4>
 <p>You can have additional CD-ROM or HDD image. To do so place your ISO or QCOW2 file on <a href="#sharing-files-between-host-and-vm">shared storage</a> and make sure their names are ‘cdrom.iso’ and ‘hdd.qcow2’ respectively. Note that this way allows you to have only one image of each type.</p>
 <p>Another variant how to add a disk image would be the use of the monitor console. Here is an example of how to add a custom CD-ROM image:</p>
-<div class="sourceCode" id="cb5" data-startFrom="1"><pre class="sourceCode numberSource numberLines"><code class="sourceCode"><a class="sourceLine" id="cb5-1" title="1"># Regular way with just ISO file.</a>
-<a class="sourceLine" id="cb5-2" title="2">drive_add 0 if=none,media=cdrom,id=cd1,file=./mycd.iso</a>
-<a class="sourceLine" id="cb5-3" title="3"></a>
-<a class="sourceLine" id="cb5-4" title="4"># Or remote image accessible over HTTP:</a>
-<a class="sourceLine" id="cb5-5" title="5">drive_add 0 if=none,media=cdrom,id=cd1,file=https://example.com/cdrom.iso</a>
-<a class="sourceLine" id="cb5-6" title="6"></a>
-<a class="sourceLine" id="cb5-7" title="7"># NBD also works:</a>
-<a class="sourceLine" id="cb5-8" title="8">drive_add 0 if=none,media=cdrom,id=cd1,file=nbd://192.168.1.10:1024/cdrom</a>
-<a class="sourceLine" id="cb5-9" title="9"></a>
-<a class="sourceLine" id="cb5-10" title="10"># Once block device is added, create a CD-ROM device:</a>
-<a class="sourceLine" id="cb5-11" title="11">device_add scsi-cd,id=scsi-cd1,drive=cd1</a></code></pre></div>
+<div class="sourceCode" id="cb6" data-startFrom="1"><pre class="sourceCode numberSource numberLines"><code class="sourceCode"><a class="sourceLine" id="cb6-1" title="1"># Regular way with just ISO file.</a>
+<a class="sourceLine" id="cb6-2" title="2">drive_add 0 if=none,media=cdrom,id=cd1,file=./mycd.iso</a>
+<a class="sourceLine" id="cb6-3" title="3"></a>
+<a class="sourceLine" id="cb6-4" title="4"># Or remote image accessible over HTTP:</a>
+<a class="sourceLine" id="cb6-5" title="5">drive_add 0 if=none,media=cdrom,id=cd1,file=https://example.com/cdrom.iso</a>
+<a class="sourceLine" id="cb6-6" title="6"></a>
+<a class="sourceLine" id="cb6-7" title="7"># NBD also works:</a>
+<a class="sourceLine" id="cb6-8" title="8">drive_add 0 if=none,media=cdrom,id=cd1,file=nbd://192.168.1.10:1024/cdrom</a>
+<a class="sourceLine" id="cb6-9" title="9"></a>
+<a class="sourceLine" id="cb6-10" title="10"># Once block device is added, create a CD-ROM device:</a>
+<a class="sourceLine" id="cb6-11" title="11">device_add scsi-cd,id=scsi-cd1,drive=cd1</a></code></pre></div>
 <h4 id="sharing-files-between-host-and-vm">Sharing files between host and VM</h4>
 <p>The Alpine Term application maintains a directory on Android storage for sharing files between host and virtual machine. Inside the virtual machine this directory is mounted on ‘/mnt/shared’ and on the host it is usually accessible at</p>
-<div class="sourceCode" id="cb6" data-startFrom="1"><pre class="sourceCode numberSource numberLines"><code class="sourceCode"><a class="sourceLine" id="cb6-1" title="1">/storage/emulated/0/Android/data/alpine.term/files</a></code></pre></div>
-<p>The actual path depends on the properties of the Android OS. Thus, if the Alpine Term was installed on the secondary device account, the path will be different.</p>
+<div class="sourceCode" id="cb7" data-startFrom="1"><pre class="sourceCode numberSource numberLines"><code class="sourceCode"><a class="sourceLine" id="cb7-1" title="1">/storage/self/primary/Android/data/alpine.term/files</a></code></pre></div>
 <p><strong>Warning</strong>: if you want to uninstall the Alpine Term, do not forget to move files from the host shared directory to a different place. Otherwise, all its data will be lost.</p>
 <h4 id="shutting-down-the-vm">Shutting down the VM</h4>
 <p>You can shut down the virtual machine and exit application with these ways:</p>

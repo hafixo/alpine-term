@@ -293,6 +293,29 @@ Do not specify more RAM than the host can provide. In fact, only 50-55% of
 total allocated RAM by QEMU are safe. Specifying higher values will likely
 result in Alpine Term being force-closed by the Android OS.
 
+Dynamically limiting of used host RAM is also possible. This can be done
+through monitor command. See an example of limiting RAM usage to 350M:
+
+```
+balloon 350
+```
+
+If guest operating system uses less memory than specified value, QEMU will
+de-allocate host RAM and update visible memory size for the virtual machine.
+In other cases virtual machine may not release used memory or do that
+partially.
+
+You can increase the memory allocation by specifying the higher value,
+however you will not be able use values higher than virtual machine is
+configured to use. So if QEMU is configured to use 2048M of memory, values
+beyond the "2048" will not work.
+
+Dynamically changing RAM allocation is implemented through balloon device
+and requires cooperation from the guest operating system. It must provide
+a driver for this device. Kernel supplied with Alpine Linux has support
+for balloon device. Custom operating systems or kernels are not guaranteed
+to work properly with it.
+
 ##### Backing up the HDD image
 
 Use QEMU monitor to back up the operating system image. You can do this by
@@ -431,12 +454,8 @@ this directory is mounted on '/mnt/shared' and on the host it is usually
 accessible at
 
 ~~~~ {.numberLines startFrom="1"}
-/storage/emulated/0/Android/data/alpine.term/files
+/storage/self/primary/Android/data/alpine.term/files
 ~~~~
-
-The actual path depends on the properties of the Android OS. Thus, if the
-Alpine Term was installed on the secondary device account, the path will
-be different.
 
 **Warning**: if you want to uninstall the Alpine Term, do not forget
 to move files from the host shared directory to a different place.
