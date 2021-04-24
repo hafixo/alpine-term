@@ -2,7 +2,7 @@
 #  docker build -t xeffyr/alpine-term-env-builder .
 # Push to docker hub with:
 #  docker push xeffyr/alpine-term-env-builder
-FROM ubuntu:20.04
+FROM ubuntu:20.10
 
 # Fix locale to avoid warnings:
 ENV LANG C.UTF-8
